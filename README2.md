@@ -63,6 +63,15 @@
 - Exemplo prático: remoção apenas do trecho "cada critério deve cobrir um fato distinto do relato e não repetir o mesmo problema com redações diferentes" na regra de linguagem direta.
 - Resultado da rodada: H 0.84, C 0.76, F1 0.69, Cl 0.85, P 0.82, média 0.7906; status reprovado; comparação vs Rodada 4: H +0.00, C +0.00, F1 +0.00, Cl +0.00, P +0.00, média +0.0000.
 
+7. Rodada 7 (hipótese única C: calibrar 1 exemplo few-shot médio)
+- Técnica(s) aplicada(s): ajuste pontual do exemplo few-shot médio (entrada e saída esperada), mantendo inalterados exemplo complexo, persona, regras, schema e metadata.
+- Justificativa: calibrar representatividade do caso médio com padrão mais frequente no dataset para tentar elevar Correctness/F1 sem introduzir variáveis extras.
+- Exemplo prático: substituição do caso médio de webhook por cenário de estoque no checkout com concorrência entre clientes, alinhado ao padrão de referência do dataset e ao formato de saída vigente.
+- Adicionado na rodada: novo exemplo médio de bug de estoque no checkout (entrada + saída esperada completas).
+- Removido na rodada: exemplo médio anterior de webhook de pagamento (entrada + saída esperada).
+- Ajustado na rodada: apenas o conteúdo do Exemplo 1 (few-shot médio), sem alterações estruturais no prompt.
+- Resultado da rodada: H 0.84, C 0.76, F1 0.69, Cl 0.84, P 0.83, média 0.7920; status reprovado; comparação vs Rodada 6: H +0.00, C +0.00, F1 +0.00, Cl -0.01, P +0.01, média +0.0014.
+
 ## Jornada de Otimização (Iterações)
 
 1. Baseline e resultados comparativos

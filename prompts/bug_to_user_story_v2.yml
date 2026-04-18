@@ -48,38 +48,37 @@ bug_to_user_story_v2:
 
     Exemplo 1
     Entrada:
-     "Webhook de pagamento aprovado não está sendo chamado.
+     "Carrinho permite finalizar compra mesmo com produto fora de estoque.
 
-     Steps to reproduce:
-     1. Fazer pedido de R$ 100
-     2. Pagar com cartão de crédito
-     3. Pagamento é aprovado no gateway
-     4. Sistema não recebe notificação
-     5. Status do pedido fica como \"pendente\"
-
-     Logs do gateway mostram: HTTP 500 ao tentar POST /api/webhooks/payment"
+     Fluxo do bug:
+     1. Produto tem 2 unidades em estoque
+     2. Cliente A adiciona 2 unidades ao carrinho
+     3. Estoque fica zerado
+     4. Cliente B ainda consegue adicionar ao carrinho
+     5. Cliente B finaliza compra
+     6. Sistema gera pedido mas não tem estoque para enviar"
 
     Saída esperada:
     ## user_story
-     Como sistema de e-commerce, eu quero receber notificações de pagamento aprovado via webhook, para atualizar o status dos pedidos automaticamente após confirmação do pagamento.
+     Como sistema de e-commerce, eu quero validar disponibilidade de estoque antes de permitir finalização de compra, para evitar criação de pedidos que não podem ser atendidos.
 
     ## acceptance_criteria
-     - Dado que um pagamento é aprovado no gateway, quando o gateway envia POST para /api/webhooks/payment, então o endpoint responde com HTTP 200.
-     - Dado que o webhook de pagamento aprovado é processado com sucesso, quando o evento é recebido, então o status do pedido muda de "pendente" para "aprovado".
-     - Dado que o status do pedido é atualizado para "aprovado", quando a atualização é concluída, então o cliente recebe confirmação da aprovação do pagamento.
-     - Dado tentativa de envio do webhook com erro no endpoint, quando ocorrer falha no processamento, então o evento é registrado em log com status e contexto do erro.
-     - Dado que há divergência entre status no gateway e no pedido interno, quando o pedido for consultado após confirmação no gateway, então a inconsistência não permanece.
+     - Dado que um produto está no carrinho, quando o cliente tenta finalizar a compra, então o sistema valida estoque disponível em tempo real.
+     - Dado que o estoque do produto está zerado no momento do checkout, quando a validação é executada, então a finalização é bloqueada.
+     - Dado bloqueio por indisponibilidade de estoque, quando o usuário tenta concluir o pedido, então o sistema exibe mensagem clara sobre indisponibilidade.
+     - Dado indisponibilidade no checkout, quando o bloqueio ocorre, então o sistema sugere remover o item ou aguardar reposição.
+     - Dado cenário com múltiplos clientes tentando comprar o último item, quando o estoque fica zerado entre adição ao carrinho e checkout, então o segundo pedido não é criado sem estoque válido.
 
     ## assumptions
-     - O endpoint /api/webhooks/payment é o canal oficial para confirmação de pagamento aprovado.
-     - O status "pendente" deveria mudar para "aprovado" após confirmação válida do gateway.
+     - A validação final de estoque deve ocorrer no checkout, mesmo que o item já esteja no carrinho.
+     - O bloqueio da compra por falta de estoque é comportamento esperado para evitar pedidos inviáveis.
 
     ## missing_info_questions
-     - Qual gateway de pagamento está em uso e qual política de retry de webhook está configurada?
-     - O erro HTTP 500 ocorre em 100% das tentativas ou apenas em parte dos eventos?
+     - A validação de estoque no checkout deve reservar o item por um tempo limitado durante a finalização?
+     - Qual mensagem padrão de indisponibilidade deve ser exibida ao usuário no canal web/mobile?
 
     ## observacoes
-     - Caso médio de integração com impacto direto em confirmação de pedidos e experiência pós-pagamento.
+     - Caso médio de lógica de negócio com concorrência entre clientes e impacto direto em confiabilidade de pedidos.
 
     Exemplo 2
     Entrada:
