@@ -47,75 +47,95 @@ bug_to_user_story_v2:
 
     Exemplo 1
     Entrada:
-    "Depois da última atualização, ao clicar em 'Finalizar compra' no app Android, a tela fica carregando para sempre. Alguns usuários disseram que o cartão foi cobrado mesmo sem confirmação."
+     "Webhook de pagamento aprovado não está sendo chamado.
+
+     Steps to reproduce:
+     1. Fazer pedido de R$ 100
+     2. Pagar com cartão de crédito
+     3. Pagamento é aprovado no gateway
+     4. Sistema não recebe notificação
+     5. Status do pedido fica como \"pendente\"
+
+     Logs do gateway mostram: HTTP 500 ao tentar POST /api/webhooks/payment"
 
     Saída esperada:
     ## user_story
-    Como cliente do app Android, eu quero finalizar a compra com confirmação clara de sucesso ou falha, para concluir pedidos com segurança e sem cobranças indevidas.
+     Como sistema de e-commerce, eu quero receber notificações de pagamento aprovado via webhook, para atualizar o status dos pedidos automaticamente após confirmação do pagamento.
 
     ## acceptance_criteria
-    - Dado que o cliente toca em "Finalizar compra", quando o processamento termina, então o app exibe confirmação de sucesso ou mensagem de erro em até 10 segundos.
-    - Dado uma falha no processamento do pagamento, quando a transação não é autorizada, então nenhuma cobrança é efetivada e o pedido não é criado.
-    - Dado timeout de rede durante o checkout, quando o usuário reabre o pedido, então o status da cobrança e do pedido é exibido de forma consistente.
+     - Dado que um pagamento é aprovado no gateway, quando o gateway envia POST para /api/webhooks/payment, então o endpoint responde com HTTP 200.
+     - Dado que o webhook de pagamento aprovado é processado com sucesso, quando o evento é recebido, então o status do pedido muda de "pendente" para "aprovado".
+     - Dado que o status do pedido é atualizado para "aprovado", quando a atualização é concluída, então o cliente recebe confirmação da aprovação do pagamento.
+     - Dado tentativa de envio do webhook com erro no endpoint, quando ocorrer falha no processamento, então o evento é registrado em log com status e contexto do erro.
+     - Dado que há divergência entre status no gateway e no pedido interno, quando o pedido for consultado após confirmação no gateway, então a inconsistência não permanece.
 
     ## assumptions
-    - O problema ocorre em versões recentes do app Android.
-    - O fluxo de checkout depende de um gateway externo de pagamento.
+     - O endpoint /api/webhooks/payment é o canal oficial para confirmação de pagamento aprovado.
+     - O status "pendente" deveria mudar para "aprovado" após confirmação válida do gateway.
 
     ## missing_info_questions
-    - Qual versão exata do app Android apresenta o problema?
-    - Em quais meios de pagamento o problema foi observado?
+     - Qual gateway de pagamento está em uso e qual política de retry de webhook está configurada?
+     - O erro HTTP 500 ocorre em 100% das tentativas ou apenas em parte dos eventos?
 
     ## observacoes
-    - Há indício de bug crítico financeiro, portanto prioridade alta.
+     - Caso médio de integração com impacto direto em confirmação de pedidos e experiência pós-pagamento.
 
     Exemplo 2
     Entrada:
-    "No painel web, os filtros de data às vezes zeram sozinhos e o relatório exportado vem vazio."
+     "Sistema de checkout com múltiplas falhas críticas.
+
+     PROBLEMAS IDENTIFICADOS:
+
+     1. SEGURANÇA - XSS no campo de cupom:
+       - Input: <script>alert('xss')</script>
+       - Sistema executa o script
+       - Não há sanitização de entrada
+
+     2. INTEGRAÇÃO - Gateway de pagamento retorna erro intermitente:
+       - POST /api/payment/process retorna 504 Gateway Timeout em 30% dos casos
+       - Clientes são cobrados mas pedido não é criado
+       - Logs: \"Connection pool exhausted\" no Postgres
+
+     3. LÓGICA DE NEGÓCIO - Race condition em cupons de desconto:
+       - Cupom \"PROMO10\" (limite: 100 usos)
+       - Sistema permitiu 147 usos
+       - Verificação de limite não é atômica
+
+     4. UX - Loading infinito após timeout:
+       - Se pagamento demora > 30s
+       - Tela fica com spinner eternamente
+       - Usuário não sabe se pagamento foi processado
+
+     IMPACTO:
+     - 150+ clientes afetados na última semana
+     - Perda estimada: R$ 15.000 em cupons indevidos
+     - 45 tickets de suporte abertos
+     - Rating do app caiu de 4.5 para 3.2 estrelas"
 
     Saída esperada:
     ## user_story
-    Como analista que usa o painel web, eu quero que os filtros de data permaneçam aplicados corretamente na visualização e exportação, para gerar relatórios completos e confiáveis.
+     Como cliente finalizando uma compra, eu quero um checkout seguro, confiável e com feedback claro de status, para concluir pagamentos sem risco, perdas ou incerteza.
 
     ## acceptance_criteria
-    - Dado que o analista seleciona um intervalo de datas válido, quando aplica o filtro, então os dados exibidos correspondem ao intervalo selecionado.
-    - Dado que o analista aplica um filtro de data e exporta o relatório, quando o arquivo é gerado, então ele contém os mesmos registros exibidos em tela.
-    - Dado que o analista navega entre abas do painel e retorna, quando revisita o relatório, então o filtro de data previamente aplicado é preservado.
+     - Dado que o usuário informa um cupom com conteúdo potencialmente malicioso, quando o sistema processa o campo, então nenhum script é executado.
+     - Dado processamento de pagamento no endpoint /api/payment/process, quando houver timeout 504, então o usuário recebe retorno claro sobre o estado do pagamento sem ficar em loading infinito.
+     - Dado que um pagamento é efetivamente cobrado pelo gateway, quando o processamento concluir, então o pedido correspondente é criado corretamente.
+     - Dado uso concorrente do cupom PROMO10 com limite de 100 usos, quando múltiplos usuários tentam aplicar simultaneamente, então o total aceito não ultrapassa 100.
+     - Dado falha de processamento no checkout, quando o erro ocorre, então o usuário visualiza orientação objetiva de próximo passo.
+     - Dado ocorrência de falhas críticas no checkout, quando o problema é monitorado, então os eventos relevantes ficam registrados para rastreabilidade.
+     - Dado impacto em múltiplas dimensões (segurança, integração, lógica e UX), quando a solução é validada, então cada problema crítico reportado está coberto por critérios verificáveis.
+     - Dado o volume de impacto reportado (clientes afetados, perdas e tickets), quando houver priorização do backlog, então esse item é tratado como prioridade alta.
 
     ## assumptions
-    - O bug ocorre de forma intermitente no painel web.
-    - A exportação utiliza os parâmetros ativos da tela.
+     - O relato descreve problemas reais em produção e não apenas ambiente de teste.
+     - O fluxo de checkout integra frontend, serviço de pagamento e persistência de pedidos.
 
     ## missing_info_questions
-    - Qual navegador e versão estavam em uso quando o problema ocorreu?
-    - O problema acontece com todos os intervalos de data ou apenas períodos longos?
+     - Quais plataformas e versões de app/web concentram a maior parte das ocorrências?
+     - Existe correlação temporal entre picos de timeout 504 e o erro "Connection pool exhausted"?
 
     ## observacoes
-    - O relato indica possível inconsistência entre estado da UI e serviço de exportação.
-
-    Exemplo 3
-    Entrada:
-    "Está tudo quebrado no login."
-
-    Saída esperada:
-    ## user_story
-    Como usuário da plataforma, eu quero autenticar com credenciais válidas sem erros inesperados, para acessar minha conta com segurança.
-
-    ## acceptance_criteria
-    - Dado credenciais válidas, quando o usuário envia o formulário de login, então o acesso é concedido e a área autenticada é carregada.
-    - Dado credenciais inválidas, quando o usuário tenta autenticar, então uma mensagem de erro clara é exibida sem expor dados sensíveis.
-    - Dado indisponibilidade temporária do serviço de autenticação, quando o login falha por sistema, então o usuário recebe mensagem orientando nova tentativa.
-
-    ## assumptions
-    - O relato não informa plataforma (web, iOS ou Android).
-    - O termo "quebrado" pode se referir a falha funcional ou de UX.
-
-    ## missing_info_questions
-    - Qual é a mensagem de erro exibida no login?
-    - Em qual plataforma e versão o problema foi observado?
-
-    ## observacoes
-    - Relato incompleto: coletar contexto antes de detalhar escopo técnico.
+     - Caso complexo com múltiplos problemas críticos explícitos; critérios cobrem segurança, integração, lógica de negócio e UX sem propor solução técnica específica.
 
     Agora analise o bug report enviado no user prompt e gere a resposta final no mesmo formato.
   user_prompt: |

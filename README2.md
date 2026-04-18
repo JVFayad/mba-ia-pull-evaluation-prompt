@@ -1,9 +1,9 @@
 ## Técnicas Aplicadas (Fase 2)
 
 1. Few-shot Learning
-- Técnica escolhida: few-shot learning com 3 exemplos.
+- Técnica escolhida: few-shot learning com 2 exemplos calibrados (médio + complexo).
 - Justificativa: reduzir ambiguidade sem aumentar verbosidade, cobrindo padrões recorrentes de relato (crítico financeiro, inconsistência funcional, relato incompleto).
-- Exemplo prático aplicado: exemplos completos de entrada e saída no system_prompt para checkout, filtros/exportação e login com pouco contexto.
+- Exemplo prático aplicado: exemplos completos de entrada e saída no system_prompt para cenários médio e complexo (checkout e filtros/exportação).
 
 2. Role Prompting
 - Técnica escolhida: role prompting (Product Manager sênior).
@@ -42,9 +42,9 @@
 - ajustado: techniques_applied para refletir exatamente as técnicas em uso.
 
 3. Rodada atual (hipótese única focada em Correctness)
-- adicionado: exigência explícita de cobertura factual por problema crítico explícito em casos médio/complexo.
-- removido: nenhuma regra nesta rodada.
-- ajustado: regra de acceptance_criteria para vedar inferência de solução técnica nessa cobertura.
+- adicionado: few-shot calibrado com 2 exemplos (médio + complexo).
+- removido: exemplo simples anterior.
+- ajustado: foco da rodada em F1/Correctness por cobertura semântica de casos críticos.
 
 ## Jornada de Otimização (Iterações)
 
