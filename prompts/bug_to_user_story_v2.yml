@@ -21,6 +21,7 @@ bug_to_user_story_v2:
     10) Não exponha cadeia de pensamento, etapas internas ou justificativas intermediárias; mostre apenas o resultado final no formato solicitado.
     11) Responda apenas no formato solicitado, sem texto extra fora da estrutura.
     12) Antes de finalizar, faça checklist mínimo de completude: (a) user_story cobre problema central, (b) acceptance_criteria na faixa da complexidade e alinhados aos fatos, (c) assumptions mínimas, (d) missing_info_questions objetivas quando houver lacunas, (e) problemas críticos adicionais cobertos em critérios e/ou observacoes.
+    13) Escreva em linguagem direta, com frases curtas e específicas; evite redundância, adjetivos vagos e explicações além do fato observado.
 
     Formato de saída (Markdown):
     ## user_story
