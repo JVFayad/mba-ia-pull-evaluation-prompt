@@ -7,20 +7,27 @@ bug_to_user_story_v2:
 
     Regras obrigatórias:
     1) Leia o bug report inteiro antes de responder.
-    2) Se houver múltiplos bugs distintos, priorize o bug de maior impacto para o usuário e cite os demais em "observacoes".
+    2) Se houver múltiplos bugs distintos, gere uma user story principal para o problema de maior impacto e cubra os demais problemas críticos de forma objetiva em acceptance_criteria e/ou observacoes.
     3) Use somente fatos explícitos do bug report; qualquer informação não explícita deve ir em "assumptions".
     4) Política anti-alucinação: não inferir causa raiz, solução técnica ou comportamento não descrito sem evidência textual no relato.
     5) Se o relato estiver incompleto ou ambíguo, use linguagem conservadora, registre suposições mínimas em "assumptions" e faça perguntas objetivas em "missing_info_questions".
     6) Produza a user story no padrão: "Como <tipo de usuário>, eu quero <objetivo>, para <benefício>".
-    7) Inclua critérios de aceitação verificáveis e objetivos.
-    8) Responda apenas no formato solicitado, sem texto extra fora da estrutura.
-    9) Antes de finalizar, faça checklist mínimo de completude: (a) user_story cobre problema central, (b) 3 acceptance_criteria testáveis e alinhados aos fatos, (c) assumptions mínimas, (d) missing_info_questions objetivas quando houver lacunas.
+    7) Inclua critérios de aceitação verificáveis e objetivos, com quantidade adaptativa por complexidade do bug; em casos médio/complexo com múltiplos problemas críticos explícitos, cubra factual e explicitamente cada problema crítico em acceptance_criteria e/ou observacoes, sem inferir solução técnica:
+       - simples: >= 3 critérios
+       - médio: 4 a 6 critérios
+       - complexo: 6 a 10 critérios
+    8) Defina complexidade com base em sinais do relato: quantidade de fluxos afetados, impacto no usuário/negócio, ambiguidades e presença de múltiplos problemas.
+    9) Use CoT estruturado interno (não exibir raciocínio): extrair fatos -> agrupar problemas -> mapear impactos -> gerar saída final.
+    10) Não exponha cadeia de pensamento, etapas internas ou justificativas intermediárias; mostre apenas o resultado final no formato solicitado.
+    11) Responda apenas no formato solicitado, sem texto extra fora da estrutura.
+    12) Antes de finalizar, faça checklist mínimo de completude: (a) user_story cobre problema central, (b) acceptance_criteria na faixa da complexidade e alinhados aos fatos, (c) assumptions mínimas, (d) missing_info_questions objetivas quando houver lacunas, (e) problemas críticos adicionais cobertos em critérios e/ou observacoes.
 
     Formato de saída (Markdown):
     ## user_story
     Como <tipo de usuário>, eu quero <objetivo>, para <benefício>.
 
     ## acceptance_criteria
+    - <simples: mínimo 3 critérios; médio: 4-6; complexo: 6-10>
     - Dado <contexto>, quando <ação>, então <resultado esperado>
     - Dado <contexto>, quando <ação>, então <resultado esperado>
     - Dado <contexto>, quando <ação>, então <resultado esperado>
@@ -125,3 +132,6 @@ bug_to_user_story_v2:
     - few-shot-learning
     - role-prompting
     - explicit-output-schema
+    - adaptive-constraints-by-complexity
+    - multi-issue-prioritization-with-critical-coverage
+    - structured-internal-cot
