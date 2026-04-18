@@ -72,6 +72,47 @@
 - Ajustado na rodada: apenas o conteúdo do Exemplo 1 (few-shot médio), sem alterações estruturais no prompt.
 - Resultado da rodada: H 0.84, C 0.76, F1 0.69, Cl 0.84, P 0.83, média 0.7920; status reprovado; comparação vs Rodada 6: H +0.00, C +0.00, F1 +0.00, Cl -0.01, P +0.01, média +0.0014.
 
+8. Rodada 8 (hipótese única A: missing_info_questions apenas com lacuna explícita)
+- Técnica(s) aplicada(s): ajuste pontual de regra de geração condicional de `missing_info_questions`, mantendo inalterados few-shot, persona, schema, demais regras e metadata.
+- Justificativa: reduzir perguntas desnecessárias quando o relato já contém informação suficiente, preservando precisão factual e objetividade da saída.
+- Exemplo prático: regra 5 alterada para "Gerar perguntas em missing_info_questions somente quando houver lacuna explícita no bug report; se não houver lacuna explícita, não gerar perguntas".
+- Adicionado na rodada: condição explícita de não gerar perguntas quando não houver lacuna explícita.
+- Removido na rodada: gatilho anterior que vinculava perguntas a relatos incompletos/ambíguos de forma mais ampla.
+- Ajustado na rodada: somente a regra 5 em `prompts/bug_to_user_story_v2.yml`.
+- Resultado da rodada: H 0.83, C 0.75, F1 0.68, Cl 0.85, P 0.82, média 0.7879; status reprovado; comparação vs Rodada 7: H -0.01, C -0.01, F1 -0.01, Cl +0.01, P -0.01, média -0.0041.
+
+9. Rodada 9 (rollback controlado da Rodada 8)
+- Técnica(s) aplicada(s): rollback pontual da regra 5 para o estado da Rodada 7, mantendo inalterados few-shot, schema, persona, metadata e demais regras.
+- Justificativa: validar regressão isolando exclusivamente a mudança da Rodada 8 em `missing_info_questions`, com o menor diff possível.
+- Exemplo prático: regra 5 restaurada para "Se o relato estiver incompleto ou ambíguo, use linguagem conservadora, registre suposições mínimas em assumptions e faça perguntas objetivas em missing_info_questions".
+- Adicionado na rodada: gatilho explícito de perguntas quando o relato estiver incompleto ou ambíguo, com orientação de linguagem conservadora e suposições mínimas.
+- Removido na rodada: condição da Rodada 8 que limitava perguntas apenas a lacuna explícita e vedava perguntas quando não houvesse lacuna explícita.
+- Ajustado na rodada: somente a regra 5 em `prompts/bug_to_user_story_v2.yml`.
+- Resultado da rodada: H 0.83, C 0.75, F1 0.69, Cl 0.85, P 0.81, média 0.7868; status reprovado.
+- Comparação Rodada 9 vs Rodada 7: H -0.01, C -0.01, F1 +0.00, Cl +0.01, P -0.02, média -0.0052.
+- Comparação Rodada 9 vs Rodada 8: H +0.00, C +0.00, F1 +0.01, Cl +0.00, P -0.01, média -0.0011.
+
+10. Rodada 10 (avaliação da versão v2 já refatorada)
+- Técnica(s) aplicada(s): avaliação controlada (push + evaluate único) da versão refatorada em `prompts/bug_to_user_story_v2.yml`, já consolidada com arquitetura reduzida de 13 para 6 princípios, few-shot mais enxuto (2 exemplos) e política factual unificada.
+- Justificativa: validar o desempenho da refatoração estrutural já incorporada ao prompt publicado no Hub, mantendo rastreabilidade objetiva da versão avaliada na rodada.
+- Exemplo prático: `src/push_prompts.py` executado para publicar `joaofayad/bug_to_user_story_v2` (versão com 6 princípios obrigatórios), seguido de uma única execução de `src/evaluate.py` com persistência de saída via `tee` em `logs/rodada10_eval_20260418_183651.log`.
+- Adicionado na rodada: registro cumulativo da avaliação da versão refatorada no README com métricas e deltas.
+- Removido na rodada: nenhuma remoção adicional nesta rodada; a simplificação estrutural e do few-shot já estava incorporada na versão avaliada.
+- Ajustado na rodada: sem novo diff de prompt após publicação; ajuste desta rodada foi de validação e documentação do estado refatorado.
+- Resultado da rodada: H 0.83, C 0.74, F1 0.67, Cl 0.84, P 0.82, média 0.7784; status reprovado.
+- Comparação Rodada 10 vs Rodada 9: H +0.00, C -0.01, F1 -0.02, Cl -0.01, P +0.01, média -0.0084.
+
+11. Rodada 11 (reset estratégico para baseline Rodada 7)
+- Técnica(s) aplicada(s): reset estratégico controlado com restauração integral de `prompts/bug_to_user_story_v2.yml` para o baseline da Rodada 7 (arquitetura anterior com 13 regras e few-shot médio+complexo), seguido de push e evaluate único.
+- Justificativa: remover o efeito da refatoração da Rodada 10 (13 -> 6 princípios) e reestabelecer um baseline confiável para continuidade da Rodada 7+ sem introduzir hipótese nova.
+- Exemplo prático: restauração exata do prompt com `Regras obrigatórias` 1..13 e Exemplo 1 de estoque no checkout (caso médio) + Exemplo 2 de checkout com falhas críticas (caso complexo), publicação via `src/push_prompts.py` e avaliação única via `src/evaluate.py | tee logs/rodada11_eval_20260418_184839.log`.
+- Adicionado na rodada: registro cumulativo da Rodada 11 com reset estratégico, métricas e deltas comparativos.
+- Removido na rodada: versão refatorada da Rodada 10 em `prompts/bug_to_user_story_v2.yml` (arquitetura de 6 princípios).
+- Ajustado na rodada: conteúdo do prompt v2 restaurado exatamente para o baseline da Rodada 7; sem nova hipótese.
+- Resultado da rodada: H 0.84, C 0.76, F1 0.69, Cl 0.85, P 0.84, média 0.7972; status reprovado.
+- Comparação Rodada 11 vs Rodada 10: H +0.01, C +0.02, F1 +0.02, Cl +0.01, P +0.02, média +0.0188.
+- Comparação Rodada 11 vs Rodada 7: H +0.00, C +0.00, F1 +0.00, Cl +0.01, P +0.01, média +0.0052.
+
 ## Jornada de Otimização (Iterações)
 
 1. Baseline e resultados comparativos
