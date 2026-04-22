@@ -4,6 +4,7 @@
 - Técnica escolhida: few-shot learning com 2 exemplos calibrados (médio + complexo).
 - Justificativa: reduzir ambiguidade sem aumentar verbosidade, cobrindo padrões recorrentes de relato (crítico financeiro, inconsistência funcional, relato incompleto).
 - Exemplo prático aplicado: exemplos completos de entrada e saída no system_prompt para cenário médio (webhook de pagamento) e cenário complexo (checkout com múltiplas falhas críticas).
+- Atualização da Rodada 14: não houve introdução de nova técnica; foi realizado saneamento de consistência instrucional, mantendo a técnica base de few-shot com 2 exemplos calibrados.
 
 2. Role Prompting
 - Técnica escolhida: role prompting (Product Manager sênior).
@@ -134,6 +135,16 @@
 - Comparação Rodada 13 vs Rodada 12 (H 0.83, C 0.76, F1 0.71, Cl 0.83, P 0.82, média 0.7908): H +0.00, C +0.00, F1 -0.02, Cl +0.01, P +0.01, média -0.0028.
 - Comparação Rodada 13 vs Rodada 11 (H 0.84, C 0.76, F1 0.69, Cl 0.85, P 0.84, média 0.7972): H -0.01, C +0.00, F1 +0.00, Cl -0.01, P -0.01, média -0.0092.
 - Confirmação de execução: evaluate foi executado exatamente uma vez nesta rodada (sem rerun).
+
+14. Rodada 14 (saneamento de consistência instrucional + avaliação)
+- Técnica(s) aplicada(s): saneamento de consistência instrucional, sem mudança de técnica base (few-shot, role prompting, schema explícito, CoT interno e restrições adaptativas mantidos).
+- Justificativa: reduzir inconsistências de instrução sem introduzir nova variável de técnica, preservando comparabilidade com a Rodada 13.
+- Adicionado na rodada: refinamento de consistência textual instrucional para reduzir ambiguidade operacional.
+- Removido na rodada: nenhuma técnica ou componente estrutural foi removido.
+- Ajustado na rodada: alinhamento de instruções existentes, sem alteração da estratégia base do prompt.
+- Resultado da rodada: H 0.83, C 0.74, F1 0.66, Cl 0.84, P 0.81, média 0.7777; status reprovado.
+- Comparação Rodada 14 vs Rodada 13 (H 0.83, C 0.76, F1 0.69, Cl 0.84, P 0.83, média 0.7880): H +0.00, C -0.02, F1 -0.03, Cl +0.00, P -0.02, média -0.0103.
+- Confirmação de execução: evaluate foi executado exatamente uma vez nesta rodada.
 
 ## Jornada de Otimização (Iterações)
 
