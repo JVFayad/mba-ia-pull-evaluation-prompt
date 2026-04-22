@@ -113,6 +113,16 @@
 - Comparação Rodada 11 vs Rodada 10: H +0.01, C +0.02, F1 +0.02, Cl +0.01, P +0.02, média +0.0188.
 - Comparação Rodada 11 vs Rodada 7: H +0.00, C +0.00, F1 +0.00, Cl +0.01, P +0.01, média +0.0052.
 
+12. Rodada 12 (ajuste pontual no few-shot complexo + avaliação)
+- Técnica(s) aplicada(s): ajuste único no Exemplo 2 (few-shot complexo), com mapeamento mais explícito de problema -> critério de aceitação, seguido de push + evaluate único.
+- Justificativa: aumentar F1/Correctness em casos complexos por cobertura factual mais direta dos problemas críticos explícitos no relato.
+- Exemplo prático: no Exemplo 2, critérios foram ajustados para explicitar (i) tratamento de timeout 504 e encerramento de loading infinito com status claro, (ii) caso de cobrança sem pedido com orientação objetiva ao usuário, e (iii) vínculo explícito entre transação confirmada e criação do pedido correspondente.
+- Adicionado na rodada: ajuste no Exemplo 2 para tornar explícito o mapeamento entre problemas críticos e acceptance_criteria, além do registro cumulativo da Rodada 12 com métricas e deltas vs Rodada 11.
+- Removido na rodada: nenhuma remoção estrutural; somente substituição pontual de redação no Exemplo 2.
+- Ajustado na rodada: conteúdo do Exemplo 2 (few-shot complexo) em `prompts/bug_to_user_story_v2.yml`; sem mudanças nas regras, schema, persona ou Exemplo 1.
+- Resultado da rodada: H 0.83, C 0.76, F1 0.71, Cl 0.83, P 0.82, média 0.7908; status reprovado.
+- Comparação Rodada 12 vs Rodada 11: H -0.01, C +0.00, F1 +0.02, Cl -0.02, P -0.02, média -0.0064.
+
 ## Jornada de Otimização (Iterações)
 
 1. Baseline e resultados comparativos

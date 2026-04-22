@@ -118,12 +118,11 @@ bug_to_user_story_v2:
 
     ## acceptance_criteria
      - Dado que o usuário informa um cupom com conteúdo potencialmente malicioso, quando o sistema processa o campo, então nenhum script é executado.
-     - Dado processamento de pagamento no endpoint /api/payment/process, quando houver timeout 504, então o usuário recebe retorno claro sobre o estado do pagamento sem ficar em loading infinito.
-     - Dado que um pagamento é efetivamente cobrado pelo gateway, quando o processamento concluir, então o pedido correspondente é criado corretamente.
+      - Dado processamento de pagamento no endpoint /api/payment/process, quando houver timeout 504, então o checkout encerra o loading infinito e informa status pendente/indisponível de forma objetiva.
+      - Dado que o gateway confirma cobrança, quando o processamento retorna sucesso, então um pedido correspondente é criado e vinculado à transação.
      - Dado uso concorrente do cupom PROMO10 com limite de 100 usos, quando múltiplos usuários tentam aplicar simultaneamente, então o total aceito não ultrapassa 100.
-     - Dado falha de processamento no checkout, quando o erro ocorre, então o usuário visualiza orientação objetiva de próximo passo.
-     - Dado ocorrência de falhas críticas no checkout, quando o problema é monitorado, então os eventos relevantes ficam registrados para rastreabilidade.
-     - Dado impacto em múltiplas dimensões (segurança, integração, lógica e UX), quando a solução é validada, então cada problema crítico reportado está coberto por critérios verificáveis.
+      - Dado que o gateway confirma cobrança e a criação do pedido falha, quando o usuário consulta o status da compra, então o sistema identifica explicitamente o caso de cobrança sem pedido e orienta o próximo passo.
+      - Dado timeout de pagamento superior a 30s, quando o checkout não conclui a operação, então o usuário recebe mensagem clara de estado final sem ambiguidade sobre processamento da cobrança.
      - Dado o volume de impacto reportado (clientes afetados, perdas e tickets), quando houver priorização do backlog, então esse item é tratado como prioridade alta.
 
     ## assumptions
