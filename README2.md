@@ -123,6 +123,18 @@
 - Resultado da rodada: H 0.83, C 0.76, F1 0.71, Cl 0.83, P 0.82, média 0.7908; status reprovado.
 - Comparação Rodada 12 vs Rodada 11: H -0.01, C +0.00, F1 +0.02, Cl -0.02, P -0.02, média -0.0064.
 
+13. Rodada 13 (ajuste de atomicidade no few-shot complexo + avaliação)
+- Técnica(s) aplicada(s): ajuste único no Exemplo 2 (few-shot complexo), com reescrita dos acceptance_criteria para maior atomicidade e menor sobreposição, seguido de push + evaluate único (sem rerun).
+- Justificativa: recuperar Clarity/Precision sem perda de cobertura factual, reduzindo ambiguidade entre critérios em cenário complexo.
+- Exemplo prático: no Exemplo 2, critérios complexos foram reescritos no padrão 1 problema crítico -> 1 resultado observável, mantendo cobertura explícita de XSS, timeout/loading, cobrança sem pedido e limite de cupom.
+- Adicionado na rodada: ajuste de redação no Exemplo 2 para granularidade mais atômica dos acceptance_criteria, além do registro cumulativo da Rodada 13 com evidência de evaluate único e métricas consolidadas.
+- Removido na rodada: nenhuma remoção estrutural; somente substituição pontual de redação no Exemplo 2.
+- Ajustado na rodada: conteúdo do Exemplo 2 (few-shot complexo) em `prompts/bug_to_user_story_v2.yml`; sem mudanças nas regras, schema, persona ou Exemplo 1.
+- Resultado da rodada: H 0.83, C 0.76, F1 0.69, Cl 0.84, P 0.83, média 0.7880; status reprovado.
+- Comparação Rodada 13 vs Rodada 12 (H 0.83, C 0.76, F1 0.71, Cl 0.83, P 0.82, média 0.7908): H +0.00, C +0.00, F1 -0.02, Cl +0.01, P +0.01, média -0.0028.
+- Comparação Rodada 13 vs Rodada 11 (H 0.84, C 0.76, F1 0.69, Cl 0.85, P 0.84, média 0.7972): H -0.01, C +0.00, F1 +0.00, Cl -0.01, P -0.01, média -0.0092.
+- Confirmação de execução: evaluate foi executado exatamente uma vez nesta rodada (sem rerun).
+
 ## Jornada de Otimização (Iterações)
 
 1. Baseline e resultados comparativos
