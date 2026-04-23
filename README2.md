@@ -5,6 +5,7 @@
 - Justificativa: reduzir ambiguidade sem aumentar verbosidade, cobrindo padrões recorrentes de relato (crítico financeiro, inconsistência funcional, relato incompleto).
 - Exemplo prático aplicado: exemplos completos de entrada e saída no system_prompt para cenário médio (webhook de pagamento) e cenário complexo (checkout com múltiplas falhas críticas).
 - Atualização da Rodada 14: não houve introdução de nova técnica; foi realizado saneamento de consistência instrucional, mantendo a técnica base de few-shot com 2 exemplos calibrados.
+- Atualização da Rodada 15: no prompt v2.4, o few-shot foi reformulado e centralizado no user_prompt (exemplo simples + exemplo complexo), com estrutura de saída adaptativa por complexidade.
 
 2. Role Prompting
 - Técnica escolhida: role prompting (Product Manager sênior).
@@ -145,6 +146,16 @@
 - Resultado da rodada: H 0.83, C 0.74, F1 0.66, Cl 0.84, P 0.81, média 0.7777; status reprovado.
 - Comparação Rodada 14 vs Rodada 13 (H 0.83, C 0.76, F1 0.69, Cl 0.84, P 0.83, média 0.7880): H +0.00, C -0.02, F1 -0.03, Cl +0.00, P -0.02, média -0.0103.
 - Confirmação de execução: evaluate foi executado exatamente uma vez nesta rodada.
+
+15. Rodada 15 (v2.4 com estrutura adaptativa + avaliação)
+- Técnica(s) aplicada(s): role_prompting, few_shot_learning, chain_of_thought_internal, skeleton_of_thought, adaptive_output_structure.
+- Justificativa: consolidar o prompt v2.4 com estrutura de saída adaptativa por complexidade (Simples/Médio/Complexo), few-shot centralizado no user_prompt e regras simplificadas com foco em não alucinação e aderência estrutural.
+- Adicionado na rodada: metadata atualizada para versão 2.4; declaração explícita das técnicas no bloco `techniques_applied`; estrutura adaptativa por complexidade; few-shot no user_prompt com exemplo simples e complexo.
+- Removido na rodada: dispersão anterior de few-shot fora do user_prompt e instruções redundantes não essenciais.
+- Ajustado na rodada: simplificação das regras obrigatórias, reforçando não alucinação e conformidade ao formato de saída.
+- Resultado da rodada: H 0.87, C 0.81, F1 0.77, Cl 0.88, P 0.86, média 0.8393; status reprovado (threshold 0.9).
+- Comparação Rodada 15 vs Rodada 14 (H 0.83, C 0.74, F1 0.66, Cl 0.84, P 0.81, média 0.7777): H +0.04, C +0.07, F1 +0.11, Cl +0.04, P +0.05, média +0.0616.
+- Confirmação de execução: evaluate foi executado exatamente uma vez nesta rodada (informado pelo usuário).
 
 ## Jornada de Otimização (Iterações)
 
