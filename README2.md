@@ -6,6 +6,8 @@
 - Exemplo prático aplicado: exemplos completos de entrada e saída no system_prompt para cenário médio (webhook de pagamento) e cenário complexo (checkout com múltiplas falhas críticas).
 - Atualização da Rodada 14: não houve introdução de nova técnica; foi realizado saneamento de consistência instrucional, mantendo a técnica base de few-shot com 2 exemplos calibrados.
 - Atualização da Rodada 15: no prompt v2.4, o few-shot foi reformulado e centralizado no user_prompt (exemplo simples + exemplo complexo), com estrutura de saída adaptativa por complexidade.
+- Atualização da Rodada 16: foi testada regra de cobertura factual 1:1 (problema crítico -> critério de aceitação) em REGRAS IMPORTANTES; a hipótese não foi promovida devido a regressão relevante nas métricas.
+- Atualização da Rodada 17: rollback da regra de cobertura factual 1:1 testada na Rodada 16; sem nova técnica introduzida, com recuperação parcial de métricas em relação à rodada anterior.
 
 2. Role Prompting
 - Técnica escolhida: role prompting (Product Manager sênior).
@@ -156,6 +158,29 @@
 - Resultado da rodada: H 0.87, C 0.81, F1 0.77, Cl 0.88, P 0.86, média 0.8393; status reprovado (threshold 0.9).
 - Comparação Rodada 15 vs Rodada 14 (H 0.83, C 0.74, F1 0.66, Cl 0.84, P 0.81, média 0.7777): H +0.04, C +0.07, F1 +0.11, Cl +0.04, P +0.05, média +0.0616.
 - Confirmação de execução: evaluate foi executado exatamente uma vez nesta rodada (informado pelo usuário).
+
+16. Rodada 16 (regra de cobertura factual 1:1 + avaliação)
+- Técnica(s) aplicada(s): few_shot_learning com ajuste de regra em REGRAS IMPORTANTES para mapeamento 1:1 entre problema crítico e critério de aceitação.
+- Justificativa: testar hipótese de aumento de cobertura factual e rastreabilidade objetiva no vínculo problema -> acceptance_criteria.
+- Adicionado na rodada: regra explícita exigindo mapeamento 1:1 entre cada problema crítico e um critério de aceitação correspondente.
+- Removido na rodada: nenhuma remoção estrutural.
+- Ajustado na rodada: REGRAS IMPORTANTES no prompt, sem alteração de arquitetura geral.
+- Resultado da rodada: H 0.83, C 0.74, F1 0.70, Cl 0.88, P 0.78, média 0.7859; status reprovado (threshold 0.9).
+- Comparação Rodada 16 vs Rodada 15 (H 0.87, C 0.81, F1 0.77, Cl 0.88, P 0.86, média 0.8393): H -0.04, C -0.07, F1 -0.07, Cl +0.00, P -0.08, média -0.0534.
+- Decisão: hipótese reprovada por regressão relevante; mudança não promovida.
+- Próxima ação: reverter a regra 1:1 e retomar baseline da Rodada 15 para próximo teste controlado com hipótese única.
+
+17. Rodada 17 (rollback da regra 1:1 + avaliação)
+- Técnica(s) aplicada(s): rollback controlado da regra de cobertura factual 1:1 em REGRAS IMPORTANTES, retornando ao comportamento pré-Rodada 16.
+- Justificativa: validar recuperação de desempenho após remover a hipótese que gerou regressão relevante na Rodada 16.
+- Adicionado na rodada: confirmação operacional do rollback e registro de nova evidência de avaliação.
+- Removido na rodada: exigência explícita de mapeamento 1:1 entre problema crítico e critério de aceitação.
+- Ajustado na rodada: REGRAS IMPORTANTES no prompt, sem alteração estrutural adicional.
+- Resultado da rodada: H 0.83, C 0.76, F1 0.74, Cl 0.89, P 0.78, média 0.8008; status reprovado (target 0.9).
+- Comparação Rodada 17 vs Rodada 16 (H 0.83, C 0.74, F1 0.70, Cl 0.88, P 0.78, média 0.7859): H +0.00, C +0.02, F1 +0.04, Cl +0.01, P +0.00, média +0.0149.
+- Comparação Rodada 17 vs Rodada 15 (H 0.87, C 0.81, F1 0.77, Cl 0.88, P 0.86, média 0.8393): H -0.04, C -0.05, F1 -0.03, Cl +0.01, P -0.08, média -0.0385.
+- Decisão: rollback aprovado como mitigação parcial frente à Rodada 16, mas rodada ainda reprovada no gate global de 0.9.
+- Próxima ação: manter baseline operacional na Rodada 15 e testar na próxima rodada uma hipótese única focada em recuperar Correctness/F1 sem perda de Precision.
 
 ## Jornada de Otimização (Iterações)
 

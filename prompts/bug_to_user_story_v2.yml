@@ -5,7 +5,7 @@ bug_to_user_story_v2:
     de avaliação. O prompt adapta a estrutura de saída conforme a
     complexidade do problema para maximizar métricas de avaliação.
 
-  version: "2.4"
+  version: "2.4.2"
 
   created_at: "2026-04-22"
 
@@ -124,9 +124,31 @@ bug_to_user_story_v2:
 
     - Usar bullet "-"
     - Usar "Critérios de Aceitação:"
-    - Usar métricas específicas quando houver
+    - Se o bug report contiver números, tempos ou códigos,
+      usar exatamente esses mesmos valores nos critérios
+    - Não inventar novos valores
     - Não inventar requisitos
     - Adaptar estrutura conforme complexidade
+
+    --------------------------------------------------
+
+    NOVA REGRA (AJUSTE FINO):
+
+    Cada critério deve mencionar explicitamente o elemento principal do bug.
+
+    Exemplo:
+
+    Se o bug envolve:
+
+    pagamento
+
+    Use:
+
+    o pagamento deve ser processado corretamente
+
+    Evitar:
+
+    o sistema deve funcionar corretamente
 
   user_prompt: |
 
