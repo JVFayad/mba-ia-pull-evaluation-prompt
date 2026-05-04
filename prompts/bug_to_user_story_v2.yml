@@ -129,6 +129,8 @@ bug_to_user_story_v2:
     - Adaptar estrutura conforme complexidade
     - Manter a resposta concisa e focada no que foi solicitado, sem adicionar informações extras ou suposições
     - Resposta deve ser clara, objetiva e não deve conter qualquer ambiguidade
+    - A resposta deve focar no problema em si, e não em especificadades da situação relatada
+      - Exemplo: No bug o cliente quer comprar um produto específico citado mas não consegue, na resposta o foco deve ser que o cliente deve conseguir comprar qualquer produto, e não especificamente o produto citado
 
   user_prompt: |
 
