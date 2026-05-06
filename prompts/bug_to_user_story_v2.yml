@@ -42,20 +42,55 @@ bug_to_user_story_v2:
 
     ESTRUTURA DE SAÍDA:
 
-    SIMPLES:
-    Como <usuário> | Quero <comportamento> | Para que <benefício>
-    Critérios de Aceitação: (Bullets simples ou Gherkin)
+    === CASO SIMPLES ===
+    Como <usuário>, eu quero <ação/resultado>, para que <benefício>.
 
-    MÉDIO E COMPLEXO:
+    Critérios de Aceitação:
+    - Dado que...
+    - Quando...
+    - Então...
+    - E...
+
+    === CASO MÉDIO ===
+    Como <usuário>, eu quero <ação/resultado>, para que <benefício>.
+
+    Critérios de Aceitação:
+    - Dado que...
+    - Quando...
+    - Então...
+    - E...
+
+    [Subcategorias Adicionais de Aceitação - se necessário, ex: Critérios Técnicos, Critérios de Acessibilidade, Critérios Adicionais para Admins]
+    - ...
+
+    Contexto Técnico (ou Contexto do Bug / Contexto de Segurança):
+    - [Liste o problema raiz detectado, causa, impacto e/ou a solução arquitetural proposta]
+
+    === CASO COMPLEXO ===
+    [Introdução opcional de escopo global do épico/story]
+
     === USER STORY PRINCIPAL ===
-    Como <usuário> | Quero <resultado> | Para que <benefício>
+
+    Título: [Título claro e descritivo]
+
+    Descrição:
+    Como <usuário>, eu quero <resultado>, para que <benefício>.
 
     === CRITÉRIOS DE ACEITAÇÃO ===
-    [Divida em subcategorias relevantes ao contexto, ex: Segurança, Acessibilidade, Performance]
-    - Dado que... Quando... Então...
+    [Divida em subcategorias relevantes nomeadas com letras, ex: A. Segurança, B. Performance]
+    - Dado que...
+    - Quando...
+    - Então...
+    - E...
 
-    Contexto Técnico (Sempre inclua para Médio/Complexo):
-    - Liste o problema raiz e a solução arquitetural proposta.
+    === CRITÉRIOS TÉCNICOS ===
+    [Agrupe os detalhes profundos de implementação técnica, segurança, banco de dados, etc.]
+
+    === CONTEXTO DO BUG ===
+    [Inclua: Severidade, Impacto Business e Problemas Identificados]
+
+    === TASKS TÉCNICAS SUGERIDAS ===
+    [Opcional: Quebre a solução em Fases, Sprints ou lista numerada de tarefas focadas]
 
     --------------------------------------------------
 
@@ -69,11 +104,6 @@ bug_to_user_story_v2:
        - Se for bug de Estoque/Concorrência: OBRIGATÓRIO sugerir validação em tempo real e reservas temporárias.
     3. TOM E COMPLETUDE: Aja proativamente. Não apenas descreva o que consertar, mas *como* deve ficar a arquitetura final.
     4. NUNCA invente informações que não estão presentes no bug report
-    5. AO FINAL, antes do retorno do output, execute este checklist sobre o texto gerado:
-       - A persona é específica e contextualizada? (ex: "cliente navegando na loja" — não apenas "usuário" ou "cliente") — EXCETO para bugs de validação/comportamento do sistema, onde "Como o sistema de [nome]" é correto
-       - Cada critério começa com "- Dado que", "- Quando", "- Então" ou "- E" (sem negrito, sem símbolos extras)?
-       - O formato corresponde à complexidade classificada? (SIMPLES: sem seções extras; MÉDIO: sem === delimitadores; COMPLEXO: com === delimitadores)
-       - Se qualquer verificação falhar, corrija o output antes de retornar.
 
     --------------------------------------------------
 
@@ -106,10 +136,9 @@ bug_to_user_story_v2:
     === EXEMPLO 3: MÉDIO (SEGURANÇA E PERMISSÕES) ===
     Entrada: Endpoint /api/users/:id retorna dados de qualquer usuário sem validar permissões. Exemplo: Usuário comum (ID 100) consegue acessar GET /api/users/1 (admin). Severidade: ALTA - vazamento de dados pessoais.
     Saída:
-    === USER STORY PRINCIPAL ===
     Como o sistema, eu quero validar permissões antes de retornar dados de usuários, para que apenas usuários autorizados possam acessar informações pessoais de outros usuários.
 
-    === CRITÉRIOS DE ACEITAÇÃO ===
+    Critérios de Aceitação:
     - Dado que sou um usuário comum
     - Quando tento acessar GET /api/users/:id de outro usuário
     - Então devo receber HTTP 403 Forbidden
@@ -131,10 +160,9 @@ bug_to_user_story_v2:
     === EXEMPLO 4: MÉDIO (PERFORMANCE E BANCO DE DADOS) ===
     Entrada: Relatório de vendas demora mais de 2 minutos para gerar quando filtro ultrapassa 1000 registros. Detalhes: Query SQL está sem index na coluna data_venda. Timeout do navegador após 120 segundos.
     Saída:
-    === USER STORY PRINCIPAL ===
     Como um gerente de vendas, eu quero gerar relatórios de vendas rapidamente mesmo com grandes volumes de dados, para que eu possa analisar informações sem esperar longos períodos.
 
-    === CRITÉRIOS DE ACEITAÇÃO ===
+    Critérios de Aceitação:
     - Dado que solicito um relatório com mais de 1000 registros
     - Quando aplico filtros e clico em "Gerar Relatório"
     - Então o relatório deve ser gerado em menos de 30 segundos
@@ -150,10 +178,9 @@ bug_to_user_story_v2:
     === EXEMPLO 5: MÉDIO (CONCORRÊNCIA E REGRA DE NEGÓCIO) ===
     Entrada: Carrinho permite finalizar compra mesmo com produto fora de estoque. Fluxo do bug: 1. Produto tem 2 unidades. 2. Cliente A adiciona 2 unidades. 3. Estoque zera. 4. Cliente B adiciona ao carrinho e finaliza compra. 6. Sistema gera pedido sem estoque.
     Saída:
-    === USER STORY PRINCIPAL ===
     Como o sistema de e-commerce, eu quero validar disponibilidade de estoque antes de permitir finalização de compra, para que não sejam criados pedidos que não podem ser atendidos.
 
-    === CRITÉRIOS DE ACEITAÇÃO ===
+    Critérios de Aceitação:
     - Dado que um produto está no carrinho
     - Quando o cliente tenta finalizar a compra
     - Então o sistema deve validar estoque disponível em tempo real
@@ -175,11 +202,9 @@ bug_to_user_story_v2:
     === EXEMPLO 6: MÉDIO (UX/UI E EXTRAPOLAÇÃO DE ACESSIBILIDADE) ===
     Entrada: Modal de confirmação de exclusão aparece atrás do menu lateral em telas pequenas (< 768px). Detalhes: z-index do modal: 1000, z-index do menu lateral: 1050. Usuários precisam fechar menu antes.
     Saída:
-    === USER STORY PRINCIPAL ===
     Como um usuário em dispositivo móvel, eu quero que modais importantes apareçam acima de todos os outros elementos, para que eu possa interagir com eles sem precisar fechar outros componentes.
 
-    === CRITÉRIOS DE ACEITAÇÃO ===
-    A. Comportamento Visual:
+    Critérios de Aceitação:
     - Dado que estou em uma tela com largura menor que 768px
     - Quando aciono uma ação que abre um modal de confirmação
     - Então o modal deve aparecer acima de todos os elementos da página
@@ -187,7 +212,7 @@ bug_to_user_story_v2:
     - E todos os botões do modal devem ser clicáveis
     - E o modal deve ocupar pelo menos 90% da largura da tela
 
-    B. Critérios de Acessibilidade:
+    Critérios de Acessibilidade:
     - O foco do teclado deve ir para o modal
     - Deve ser possível fechar com ESC
     - O backdrop deve fechar ao clicar fora
@@ -200,8 +225,11 @@ bug_to_user_story_v2:
     === EXEMPLO 7: COMPLEXO (MÚLTIPLAS FALHAS CRÍTICAS) ===
     Entrada: Sistema de checkout com múltiplas falhas críticas. 1. SEGURANÇA - XSS no campo de cupom: Input <script>alert('xss')</script> é executado. 2. INTEGRAÇÃO - Gateway retorna 504 Gateway Timeout em 30% dos casos. Logs: "Connection pool exhausted" no Postgres. 3. LÓGICA - Race condition em cupons (limite 100 usos, permitiu 147). 4. UX - Loading infinito após timeout.
     Saída:
+    Como um cliente finalizando minha compra, eu quero um processo de checkout seguro, confiável e com feedback claro, para que eu possa completar minhas compras sem preocupações ou frustrações.
+
     === USER STORY PRINCIPAL ===
     Título: Checkout seguro e confiável com tratamento robusto de erros
+    
     Descrição:
     Como um cliente do e-commerce, eu quero finalizar minhas compras de forma segura e receber feedback claro sobre o status do pagamento, para que eu tenha confiança no processo e saiba exatamente o que está acontecendo.
 
@@ -268,6 +296,13 @@ bug_to_user_story_v2:
     2. Connection pool exhausted (causa 504 timeout)
     3. Race condition em cupons (não-atômico)
     4. Loading infinito após timeout (UX ruim)
+    
+    === TASKS TÉCNICAS SUGERIDAS ===
+    1. [SEGURANÇA] Implementar sanitização de input no cupom
+    2. [INFRA] Aumentar Postgres connection pool
+    3. [BACKEND] Adicionar retry pattern no payment service
+    4. [BACKEND] Implementar controle atômico de cupons
+    5. [FRONTEND] Melhorar UX com feedback de status
 
   user_prompt: |
 
