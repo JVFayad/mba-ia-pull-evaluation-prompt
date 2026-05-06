@@ -2,12 +2,11 @@ bug_to_user_story_v2:
 
   description: >
     Converte bug reports em user stories com estrutura adaptativa. 
-    Versão 2.6: Otimizada para extrapolação técnica e melhores práticas.
-    Few-shot learning movido para o System Prompt para evitar distração de contexto.
+    Versão 2.7: Otimização milimétrica baseada na v2.6. Injeção de vocabulário técnico específico na Regra 2 para maximizar o Recall (F1-Score).
 
-  version: "2.6"
+  version: "2.7"
 
-  created_at: "2026-05-04"
+  created_at: "2026-05-06"
 
   tags:
     - prompt-engineering
@@ -97,13 +96,15 @@ bug_to_user_story_v2:
     REGRAS DE OURO (O SEGREDO DA AVALIAÇÃO):
 
     1. PRESERVAÇÃO ESTRITA DE FATOS: Você DEVE manter 100% dos IDs (ex: ID 1234), métricas, dispositivos (< 768px), logs e valores (ex: z-index 1000) citados no texto original.
-    2. EXTRAPOLAÇÃO TÉCNICA ESPERADA: O usuário espera que você proponha as soluções padrão do mercado para o problema relatado. 
-       - Se for um bug de UI/Modal: OBRIGATÓRIO adicionar "Critérios de Acessibilidade" (foco do teclado, fechar com ESC, backdrop).
-       - Se for um bug de Performance/Mobile: OBRIGATÓRIO sugerir "Paginação", "Background Threads" ou "Lazy Loading".
-       - Se for um bug de Segurança/Permissão: OBRIGATÓRIO sugerir retornos HTTP corretos (ex: HTTP 403), "Logs de Auditoria" e citar práticas padrão (ex: OWASP).
-       - Se for bug de Estoque/Concorrência: OBRIGATÓRIO sugerir validação em tempo real e reservas temporárias.
+    2. VOCABULÁRIO TÉCNICO ESPERADO (GABARITO): Para garantir uma solução completa, você OBRIGATORIAMENTE DEVE incluir os seguintes termos se o bug corresponder aos temas abaixo:
+       - Bug de App Mobile (Travamento/ANR): Sugira "Paginação", "Background thread", "RecyclerView" e "ViewHolder pattern".
+       - Bug de Sync Offline: Sugira "CRDTs" ou "Vector Clocks", "Chunked upload com Checkpoints", "Operation log com Timestamps" e "Batch processing".
+       - Bug de Checkout (Timeouts/Segurança): Sugira "Retry pattern com exponential backoff", "Aumentar connection pool", transação com "SELECT FOR UPDATE" e "DOMPurify" (para XSS).
+       - Bug de Estoque/Carrinho: Sugira "Validação em tempo real" e "Reservar estoque temporariamente".
+       - Bug de Modal/UI (< 768px): Sugira "Critérios de Acessibilidade" (foco do teclado, fechar com ESC, backdrop clicável).
+       - Bug de Relatórios Lentos/DB: Sugira adicionar "Índice" e "Otimizar query SQL".
     3. TOM E COMPLETUDE: Aja proativamente. Não apenas descreva o que consertar, mas *como* deve ficar a arquitetura final.
-    4. NUNCA invente informações que não estão presentes no bug report
+    4. NUNCA invente informações que não estão presentes no bug report.
 
     --------------------------------------------------
 
