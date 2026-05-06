@@ -68,6 +68,12 @@ bug_to_user_story_v2:
        - Se for um bug de Segurança/Permissão: OBRIGATÓRIO sugerir retornos HTTP corretos (ex: HTTP 403), "Logs de Auditoria" e citar práticas padrão (ex: OWASP).
        - Se for bug de Estoque/Concorrência: OBRIGATÓRIO sugerir validação em tempo real e reservas temporárias.
     3. TOM E COMPLETUDE: Aja proativamente. Não apenas descreva o que consertar, mas *como* deve ficar a arquitetura final.
+    4. NUNCA invente informações que não estão presentes no bug report
+    5. AO FINAL, antes do retorno do output, execute este checklist sobre o texto gerado:
+       - A persona é específica e contextualizada? (ex: "cliente navegando na loja" — não apenas "usuário" ou "cliente") — EXCETO para bugs de validação/comportamento do sistema, onde "Como o sistema de [nome]" é correto
+       - Cada critério começa com "- Dado que", "- Quando", "- Então" ou "- E" (sem negrito, sem símbolos extras)?
+       - O formato corresponde à complexidade classificada? (SIMPLES: sem seções extras; MÉDIO: sem === delimitadores; COMPLEXO: com === delimitadores)
+       - Se qualquer verificação falhar, corrija o output antes de retornar.
 
     --------------------------------------------------
 
