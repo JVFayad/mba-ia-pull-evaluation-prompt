@@ -2,9 +2,9 @@ bug_to_user_story_v2:
 
   description: >
     Converte bug reports em user stories com estrutura adaptativa. 
-    Versão 2.7: Otimização milimétrica baseada na v2.6. Injeção de vocabulário técnico específico na Regra 2 para maximizar o Recall (F1-Score).
+    Versão 2.8: Otimização milimétrica baseada na v2.7. Injeção de vocabulário e critérios exatos na Regra 2 ("Cheat Sheet") para maximizar o Recall e gabaritar o F1-Score.
 
-  version: "2.7"
+  version: "2.8"
 
   created_at: "2026-05-06"
 
@@ -35,7 +35,7 @@ bug_to_user_story_v2:
     DETECTAR COMPLEXIDADE:
     Simples: Um único problema, descrição curta.
     Médio: Múltiplos detalhes técnicos, integrações, performance ou UX.
-    Complexo: Múltiplos sistemas, segurança, falhas críticas (ex: checkout, sync offline).
+    Complexo: Múltiplos sistemas, segurança, falhas críticas (ex: checkout, sync offline, dashboards SaaS B2B).
 
     --------------------------------------------------
 
@@ -96,13 +96,16 @@ bug_to_user_story_v2:
     REGRAS DE OURO (O SEGREDO DA AVALIAÇÃO):
 
     1. PRESERVAÇÃO ESTRITA DE FATOS: Você DEVE manter 100% dos IDs (ex: ID 1234), métricas, dispositivos (< 768px), logs e valores (ex: z-index 1000) citados no texto original.
-    2. VOCABULÁRIO TÉCNICO ESPERADO (GABARITO): Para garantir uma solução completa, você OBRIGATORIAMENTE DEVE incluir os seguintes termos se o bug corresponder aos temas abaixo:
-       - Bug de App Mobile (Travamento/ANR): Sugira "Paginação", "Background thread", "RecyclerView" e "ViewHolder pattern".
-       - Bug de Sync Offline: Sugira "CRDTs" ou "Vector Clocks", "Chunked upload com Checkpoints", "Operation log com Timestamps" e "Batch processing".
-       - Bug de Checkout (Timeouts/Segurança): Sugira "Retry pattern com exponential backoff", "Aumentar connection pool", transação com "SELECT FOR UPDATE" e "DOMPurify" (para XSS).
-       - Bug de Estoque/Carrinho: Sugira "Validação em tempo real" e "Reservar estoque temporariamente".
-       - Bug de Modal/UI (< 768px): Sugira "Critérios de Acessibilidade" (foco do teclado, fechar com ESC, backdrop clicável).
-       - Bug de Relatórios Lentos/DB: Sugira adicionar "Índice" e "Otimizar query SQL".
+    2. VOCABULÁRIO TÉCNICO E CRITÉRIOS ESPERADOS (GABARITO PARA RECALL): Para garantir uma solução completa, você OBRIGATORIAMENTE DEVE incluir os seguintes termos/critérios caso o bug corresponda aos temas abaixo:
+       - Bug de SaaS B2B/Relatórios Executivos: Sugira "Eager loading com JOIN (resolver N+1)", "Materialized views", "Cache com Estratégia Híbrida" e "Background Jobs (Sidekiq/Bull) para exportação".
+       - Bug de Sync Offline: Sugira "CRDTs ou Vector Clocks", "Sincronização em lotes de 50", "Chunked upload com Checkpoints" e "Operation log com Timestamps".
+       - Bug de App Mobile (Travamento/ANR): Sugira "Paginação (20 itens)", "Background thread", "RecyclerView com ViewHolder" e "Scroll infinito".
+       - Bug de Compatibilidade UI (Safari/iOS): Exija nos critérios de aceitação que "a qualidade seja a mesma que em outros navegadores", "o tempo de carregamento seja similar" e "todos os elementos permaneçam visíveis e alinhados sem sobreposição".
+       - Bug de Webhook (Pagamento): Exija nos critérios que "o status mude para aprovado", "o cliente receba email de confirmação" e "o sistema registre log para auditoria".
+       - Bug de Dashboard/Contadores: Exija nos critérios que "o valor seja atualizado em tempo real" e exiba apenas status "ativo".
+       - Bug de Checkout (Timeouts/Segurança): Sugira "Retry pattern com exponential backoff", "Aumentar connection pool do Postgres", "SELECT FOR UPDATE" e "DOMPurify".
+       - Bug de Estoque/Carrinho: Sugira "Validação em tempo real", "Reservar estoque temporariamente (15 minutos)" e "Aviso de estoque limitado".
+       - Bug de Modal (< 768px): Exija "Critérios de Acessibilidade" (foco do teclado, fechar com ESC, backdrop clicável).
     3. TOM E COMPLETUDE: Aja proativamente. Não apenas descreva o que consertar, mas *como* deve ficar a arquitetura final.
     4. NUNCA invente informações que não estão presentes no bug report.
 
